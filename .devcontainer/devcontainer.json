@@ -1,0 +1,67 @@
+{
+  "name": "Python 3 & PostgreSQL",
+  "dockerComposeFile": "docker-compose.yml",
+  "service": "app", 
+  "hostRequirements": {
+    "cpus": 2
+  },
+  "waitFor": "onCreateCommand",
+  "postCreateCommand": "",
+  "postAttachCommand": {
+    "server": "flask --debug run --host=0.0.0.0"
+  },
+  "portsAttributes": {
+    "5000": {
+      "label": "Flask Apps",
+      "protocol": "http",
+      "onAutoForward": "openPreview"
+    },
+    "5050": {
+      "label": "pgadmin",
+      "onAutoForward": "openPreview"
+    },
+    "8025": {
+      "label": "mailhog",
+      "onAutoForward": "openPreview"
+    }
+  },
+  "customizations": {
+    "codespaces": {
+      "openFiles": [
+        "templates/index.html"
+      ]
+    },
+    "vscode": {
+      "settings": {
+        "python.defaultInterpreterPath": "/usr/local/bin/python",
+        "python.linting.enabled": true,
+        "python.linting.pylintEnabled": true,
+        "python.formatting.autopep8Path": "/usr/local/py-utils/bin/autopep8",
+        "python.formatting.blackPath": "/usr/local/py-utils/bin/black",
+        "python.formatting.yapfPath": "/usr/local/py-utils/bin/yapf",
+        "python.linting.banditPath": "/usr/local/py-utils/bin/bandit",
+        "python.linting.flake8Path": "/usr/local/py-utils/bin/flake8",
+        "python.linting.mypyPath": "/usr/local/py-utils/bin/mypy",
+        "python.linting.pycodestylePath": "/usr/local/py-utils/bin/pycodestyle",
+        "python.linting.pydocstylePath": "/usr/local/py-utils/bin/pydocstyle",
+        "python.linting.pylintPath": "/usr/local/py-utils/bin/pylint",
+        "python.testing.pytestPath": "/usr/local/py-utils/bin/pytest"
+      },
+      "extensions": [
+        "ms-python.python",
+        "ms-python.vscode-pylance",
+        "samuelcolvin.jinjahtml",
+        "monosans.djlint",
+        "ms-azuretools.vscode-docker"
+      ]
+    }
+  },
+  "forwardPorts": [
+    5000,
+    5050,
+    8025
+  ],
+  "features": {
+    "ghcr.io/devcontainers/features/docker-from-docker:1": {}
+  }
+}

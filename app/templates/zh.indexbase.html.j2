@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet"
+          href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    <style>
+    .dropdown-submenu {
+      position: relative;
+    }
+
+    .dropdown-submenu:hover .dropdown-menu {
+      display: block;
+      top: 0;
+      left: 100%;
+      margin-top: 0;
+    }
+
+    .dropdown-menu > li > a:hover {
+      background-color: #f1f1f1;
+    }
+    
+    /* 夜間模式樣式 */
+    body.dark-mode {
+      background-color: #121212;
+      color: #e0e0e0;
+    }
+    
+    body.dark-mode .navbar-default {
+      background-color: #1e1e1e;
+      border-color: #333;
+    }
+    
+    body.dark-mode .navbar-default .navbar-nav > li > a,
+    body.dark-mode .navbar-brand,
+    body.dark-mode .navbar-default .navbar-nav > .open > a {
+      color: #e0e0e0;
+    }
+    
+    body.dark-mode .dropdown-menu {
+      background-color: #1e1e1e;
+      border-color: #333;
+    }
+    
+    body.dark-mode .dropdown-menu > li > a {
+      color: #e0e0e0;
+    }
+    
+    body.dark-mode .dropdown-menu > li > a:hover {
+      background-color: #333;
+      color: #fff;
+    }
+    
+    body.dark-mode .alert-info {
+      background-color: #2d4b60;
+      border-color: #375a72;
+      color: #e0e0e0;
+    }
+    
+    body.dark-mode .panel,
+    body.dark-mode .well,
+    body.dark-mode .list-group-item,
+    body.dark-mode .modal-content {
+      background-color: #1e1e1e;
+      border-color: #333;
+      color: #e0e0e0;
+    }
+    
+    body.dark-mode .table-striped > tbody > tr:nth-of-type(odd) {
+      background-color: #252525;
+    }
+    
+    body.dark-mode .table-hover > tbody > tr:hover {
+      background-color: #333;
+    }
+    
+    body.dark-mode .form-control {
+      background-color: #2a2a2a;
+      border-color: #444;
+      color: #e0e0e0;
+    }
+    
+    body.dark-mode .btn-default {
+      background-color: #2a2a2a;
+      border-color: #444;
+      color: #e0e0e0;
+    }
+    
+    body.dark-mode .btn-info {
+      background-color: #1e6285;
+      border-color: #174d6a;
+    }
+    
+    body.dark-mode .btn-primary {
+      background-color: #1e4b85;
+      border-color: #17386a;
+    }
+    
+    body.dark-mode .btn-success {
+      background-color: #1e853b;
+      border-color: #176a2f;
+    }
+    
+    body.dark-mode .btn-warning {
+      background-color: #85621e;
+      border-color: #6a4d17;
+    }
+    
+    /* 主題切換按鈕樣式 */
+    .theme-toggle-wrapper {
+      display: inline-block;
+      padding: 7px 0;
+    }
+    
+    #theme-toggle {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      background-color: transparent;
+      border: 2px solid #ccc;
+      color: #555;
+      cursor: pointer;
+      padding: 0;
+      transition: all 0.3s ease;
+      margin-left: 10px;
+      box-shadow: none;
+    }
+    
+    #theme-toggle:hover {
+      background-color: rgba(0, 0, 0, 0.05);
+    }
+    
+    body.dark-mode #theme-toggle {
+      background-color: #333;
+      border-color: #666;
+      color: #f8f8f8;
+    }
+    
+    body.dark-mode #theme-toggle:hover {
+      background-color: #444;
+    }
+    
+    .night-mode-icon {
+      font-size: 16px;
+    }
+    </style>
+  </head>
+  <body>
+    <nav class="navbar navbar-default">
+      <div class="container-fluid">
+        <div class="navbar-header">
+          <a class="navbar-brand" href="/zh">泊易香港 (EaseParkHK)</a>
+        </div>
+        <ul class="nav navbar-nav">
+          <li class="dropdown">
+            <a class="dropdown-toggle" data-toggle="dropdown" href="#">地區
+              <span class="caret"></span></a>
+            <ul class="dropdown-menu">
+              <li class="dropdown-submenu">
+                <a class="test" tabindex="-1" href="/zh/hong_kong_island">香港島<span class="caret"></span></a>
+                <ul class="dropdown-menu">
+                  <li>
+                    <a tabindex="-1" href="/zh/carparkinfo/Central%20&%20Western">中西區</a>
+                  </li>
+                  <li>
+                    <a tabindex="-1" href="/zh/carparkinfo/Wan%20Chai">灣仔區</a>
+                  </li>
+                  <li>
+                    <a tabindex="-1" href="/zh/carparkinfo/Eastern">東區</a>
+                  </li>
+                  <li>
+                    <a tabindex="-1" href="/zh/carparkinfo/Southern">南區</a>
+                  </li>
+                </ul>
+              </li>
+              <li class="dropdown-submenu">
+                <a class="test" tabindex="-1" href="/zh/kowloon">九龍<span class="caret"></span></a>
+                <ul class="dropdown-menu">
+                  <li>
+                    <a tabindex="-1" href="/zh/carparkinfo/Yau%20Tsim%20Mong">油尖旺區</a>
+                  </li>
+                  <li>
+                    <a tabindex="-1" href="/zh/carparkinfo/Sham%20Shui%20Po">深水埗區</a>
+                  </li>
+                  <li>
+                    <a tabindex="-1" href="/zh/carparkinfo/Kowloon%20City">九龍城區</a>
+                  </li>
+                  <li>
+                    <a tabindex="-1" href="/zh/carparkinfo/Wong%20Tai%20Sin">黃大仙區</a>
+                  </li>
+                  <li>
+                    <a tabindex="-1" href="/zh/carparkinfo/Kwun%20Tong">觀塘區</a>
+                  </li>
+                </ul>
+              </li>
+              <li class="dropdown-submenu">
+                <a class="test" tabindex="-1" href="/zh/new_territories">新界<span class="caret"></span></a>
+                <ul class="dropdown-menu">
+                  <li>
+                    <a tabindex="-1" href="/zh/carparkinfo/Kwai%20Tsing">葵青區</a>
+                  </li>
+                  <li>
+                    <a tabindex="-1" href="/zh/carparkinfo/Tsuen Wan">荃灣區</a>
+                  </li>
+                  <li>
+                    <a tabindex="-1" href="/zh/carparkinfo/Yuen Long">元朗區</a>
+                  </li>
+                  <li>
+                    <a tabindex="-1" href="/zh/carparkinfo/Tuen Mun">屯門區</a>
+                  </li>
+                  <li>
+                    <a tabindex="-1" href="/zh/carparkinfo/North">北區</a>
+                  </li>
+                  <li>
+                    <a tabindex="-1" href="/zh/carparkinfo/Tai%20Po">大埔區</a>
+                  </li>
+                  <li>
+                    <a tabindex="-1" href="/zh/carparkinfo/Sha%20Tin">沙田區</a>
+                  </li>
+                  <li>
+                    <a tabindex="-1" href="/zh/carparkinfo/Sai%20Kung">西貢區</a>
+                  </li>
+                  <li>
+                    <a tabindex="-1" href="/zh/carparkinfo/Islands">離島區</a>
+                  </li>
+                </ul>
+              </li>
+            </ul>
+          </li>
+          <li>
+            <a tabindex="-1" href="/zh/camera">交通攝影機位置</a>
+          </li>
+          <li>
+            <a tabindex="-1" href="/zh/news">交通通告</a>
+          </li>
+        </ul>
+        <ul class="nav navbar-nav navbar-right">
+          {% if current_user.is_anonymous %}
+            <li class="language-box">
+              {% if request.path.startswith('/zh/') %}
+                <a href="{{ request.path[3:] }}">{{ _('English') }}</a>
+              {% elif request.path == '/zh' %}
+                <a href="/">{{ _('EN') }}</a>
+              {% else %}
+                <a href="{{ '/zh' + request.path if request.path != '/' else '/zh' }}">{{ _('繁') }}</a>
+              {% endif %}
+            </li>
+            <li>
+              <a href="/zh/login">{{ _('登入') }}</a>
+            </li>
+            <li>
+              <a href="/zh/settings">{{ _('設定') }}</a>
+            </li>
+            <li class="theme-toggle-wrapper">
+              <button id="theme-toggle" class="btn">
+                <i class="glyphicon glyphicon-adjust night-mode-icon"></i>
+              </button>
+            </li>
+            {% else %}
+              <li class="language-box">
+                {% if request.path.startswith('/zh/') %}
+                  <a href="{{ request.path[3:] }}">{{ _('English') }}</a>
+                {% elif request.path == '/zh' %}
+                  <a href="/">{{ _('EN') }}</a>
+                {% else %}
+                  <a href="{{ '/zh' + request.path if request.path != '/' else '/zh' }}">{{ _('繁') }}</a>
+                {% endif %}
+              </li>
+              <li>
+                <a href="{{ url_for('user', username=current_user.username) }}">{{ _('個人資料') }}</a>
+              </li>
+              <li>
+                <a href="/settings">{{ _('設定') }}</a>
+              </li>
+              <li>
+                <a href="{{ url_for('logout') }}">{{ _('登出') }}</a>
+              </li>
+              <li class="theme-toggle-wrapper">
+                <button id="theme-toggle" class="btn">
+                  <i class="glyphicon glyphicon-adjust night-mode-icon"></i>
+                </button>
+              </li>
+            {% endif %}
+          </ul>
+        </div>
+      </nav>
+    </body>
+  </html>
+
+  <script>
+    // 夜間模式切換功能
+    document.addEventListener('DOMContentLoaded', function() {
+      const themeToggle = document.getElementById('theme-toggle');
+      const body = document.body;
+      const icon = themeToggle.querySelector('i');
+      
+      // 套用已儲存的主題偏好設定
+      if (localStorage.getItem('darkMode') === 'enabled') {
+        body.classList.add('dark-mode');
+        updateIcon(true);
+      }
+      
+      // 切換按鈕點擊時切換夜間模式
+      themeToggle.addEventListener('click', function(e) {
+        e.preventDefault();
+        const isDarkMode = body.classList.toggle('dark-mode');
+        localStorage.setItem('darkMode', isDarkMode ? 'enabled' : 'disabled');
+        updateIcon(isDarkMode);
+      });
+      
+      // 根據模式更新圖示
+      function updateIcon(isDarkMode) {
+        icon.className = isDarkMode ? 
+          'glyphicon glyphicon-sun night-mode-icon' : 
+          'glyphicon glyphicon-adjust night-mode-icon';
+      }
+      
+      // 若無儲存的偏好設定，檢查系統偏好
+      if (!localStorage.getItem('darkMode') && 
+          window.matchMedia && 
+          window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        body.classList.add('dark-mode');
+        localStorage.setItem('darkMode', 'enabled');
+        updateIcon(true);
+      }
+    });
+    
+  </script>

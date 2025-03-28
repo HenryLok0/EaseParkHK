@@ -1,0 +1,387 @@
+{% extends "zh.base.html.j2" %}
+{% import 'bootstrap/wtf.html' as wtf %}
+{% block head %}
+<title>交通攝像頭位置</title>
+<link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}" type="image/x-icon">
+{% endblock %}
+{% block app_content %}
+    <h1 class="text-center mb-4">交通攝像頭位置</h1>
+    <div class="container" >
+        <div class="row">
+            <div class="col-md-12">
+                <h2>收藏</h2>
+                <div class="table-responsive">
+                    <table class="table table-striped table-bordered">
+                        <thead class="thead-dark">
+                            <tr>
+                                <th>地區</th>
+                                <th>區域</th>
+                                <th>描述</th>
+                                <th>圖片</th>
+                                <th>位置</th>
+                                <th>收藏</th>
+                            </tr>
+                        </thead>
+                        <tbody id="favoritesTableBody">
+                            <!-- 收藏的攝像頭將動態添加至此 -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="row mt-4">
+            <div class="col-md-12">
+                <div class="form-group">
+                    <label for="districtSelect">選擇區域：</label>
+                    <select id="districtSelect" class="form-control">
+                        <option value="">
+                            -- 選擇區域 --
+                        </option>
+                        <option value="中西區">
+                            中西區
+                        </option>
+                        <option value="東區">
+                            東區
+                        </option>
+                        <option value="南區">
+                            南區
+                        </option>
+                        <option value="灣仔區">
+                            灣仔區
+                        </option>
+                        <option value="離島區">
+                            離島區
+                        </option>
+                        <option value="葵青區">
+                            葵青區
+                        </option>
+                        <option value="北區區">
+                            北區區
+                        </option>
+                        <option value="西貢區">
+                            西貢區
+                        </option>
+                        <option value="沙田區">
+                            沙田區
+                        </option>
+                        <option value="大埔區">
+                            大埔區
+                        </option>
+                        <option value="荃灣區">
+                            荃灣區
+                        </option>
+                        <option value="屯門區">
+                            屯門區
+                        </option>
+                        <option value="元朗區">
+                            元朗區
+                        </option>
+                        <option value="九龍城區">
+                            九龍城區
+                        </option>
+                        <option value="觀塘區">
+                            觀塘區
+                        </option>
+                        <option value="深水埗區">
+                            深水埗區
+                        </option>
+                        <option value="黃大仙區">
+                            黃大仙區
+                        </option>
+                        <option value="油尖旺區">
+                            油尖旺區
+                        </option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="descriptionSearch">搜索描述：</label>
+                    <input type="text"
+                           id="descriptionSearch"
+                           class="form-control"
+                           placeholder="按描述搜索">
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-striped table-bordered">
+                        <thead class="thead-dark">
+                            <tr>
+                                <th>地區</th>
+                                <th>區域</th>
+                                <th>描述</th>
+                                <th>圖片</th>
+                                <th>位置</th>
+                                <th>收藏</th>
+                            </tr>
+                        </thead>
+                        <tbody id="cameraTableBody">
+                            {% for camera in cameras %}
+                                <tr data-district="{{ camera.district }}"
+                                    data-camera-id="{{ camera.id }}">
+                                    <td>{{ camera.region }}</td>
+                                    <td>{{ camera.district }}</td>
+                                    <td>{{ camera.description }}</td>
+                                    <td>
+                                        <img src="{{ camera.url }}"
+                                             alt="{{ camera.description }}"
+                                             class="img-thumbnail"
+                                             width="200"
+                                             data-toggle="modal"
+                                             data-target="#cameraModal{{ loop.index }}">
+                                    </td>
+                                    <td>
+                                        <button class="btn btn-primary"
+                                                onclick="showMap('{{ camera.latitude }}', '{{ camera.longitude }}', '{{ camera.description }}')">
+                                            查看地圖
+                                        </button>
+                                    </td>
+                                    <td>
+                                        <button class="btn btn-warning favorite-btn" onclick="toggleFavorite(this)">收藏</button>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% for camera in cameras %}
+    <div class="modal fade"
+         id="cameraModal{{ loop.index }}"
+         tabindex="-1"
+         role="dialog"
+         aria-labelledby="cameraModalLabel{{ loop.index }}"
+         aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="cameraModalLabel{{ loop.index }}">{{ camera.description }}</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="關閉">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <img src="{{ camera.url }}"
+                         alt="{{ camera.description }}"
+                         class="img-fluid">
+                    <p>
+                        <strong>地區：</strong> {{ camera.region }}
+                    </p>
+                    <p>
+                        <strong>區域：</strong> {{ camera.district }}
+                    </p>
+                    <p>
+                        <strong>描述：</strong> {{ camera.description }}
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endfor %}
+<!-- 地圖模態框 -->
+<div id="map-modal" class="modal fade" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="mapModalLabel">
+                    圖片
+                </h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="關閉">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <iframe id="map"
+                        width="100%"
+                        height="400px"
+                        frameborder="0"
+                        style="border:0"
+                        allowfullscreen></iframe>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    document.getElementById('districtSelect').addEventListener('change', function() {
+        var selectedDistrict = this.value;
+        filterByDistrict(selectedDistrict);
+    });
+
+    document.getElementById('descriptionSearch').addEventListener('input', function() {
+        var searchText = this.value.toLowerCase();
+        filterByDescription(searchText);
+    });
+
+    function filterByDistrict(district) {
+        var rows = document.querySelectorAll('#cameraTableBody tr');
+        rows.forEach(function(row) {
+            if (district === "" || row.getAttribute('data-district') === district) {
+                row.style.display = '';
+            } else {
+                row.style.display = 'none';
+            }
+        });
+    }
+
+    function filterByDescription(searchText) {
+        var rows = document.querySelectorAll('#cameraTableBody tr');
+        rows.forEach(function(row) {
+            var description = row.querySelector('td:nth-child(3)').textContent.toLowerCase();
+            if (description.includes(searchText)) {
+                row.style.display = '';
+            } else {
+                row.style.display = 'none';
+            }
+        });
+    }
+
+    function showMap(lat, long, description) {
+        const mapFrame = document.getElementById('map');
+        mapFrame.src = `https://www.google.com/maps?q=${lat},${long}&output=embed`;
+        document.getElementById('mapModalLabel').textContent = `圖片 - ${description}`;
+        $('#map-modal').modal('show');
+    }
+
+    function toggleFavorite(button) {
+        const row = button.closest('tr');
+        const cameraId = row.getAttribute('data-camera-id');
+        if (row.classList.contains('favorite')) {
+            row.classList.remove('favorite');
+            button.textContent = '收藏';
+            removeFavorite(cameraId);
+            document.getElementById('cameraTableBody').appendChild(row);
+        } else {
+            row.classList.add('favorite');
+            button.textContent = '取消收藏';
+            addFavorite(cameraId);
+            document.getElementById('favoritesTableBody').appendChild(row);
+        }
+    }
+
+    function addFavorite(cameraId) {
+        let favorites = JSON.parse(sessionStorage.getItem('favorites')) || [];
+        if (!favorites.includes(cameraId)) {
+            favorites.push(cameraId);
+            sessionStorage.setItem('favorites', JSON.stringify(favorites));
+        }
+    }
+
+    function removeFavorite(cameraId) {
+        let favorites = JSON.parse(sessionStorage.getItem('favorites')) || [];
+        favorites = favorites.filter(id => id !== cameraId);
+        sessionStorage.setItem('favorites', JSON.stringify(favorites));
+    }
+
+    function loadFavorites() {
+        let favorites = JSON.parse(sessionStorage.getItem('favorites')) || [];
+        favorites.forEach(cameraId => {
+            const row = document.querySelector(`tr[data-camera-id="${cameraId}"]`);
+            if (row) {
+                row.classList.add('favorite');
+                const button = row.querySelector('.favorite-btn');
+                button.textContent = '取消收藏';
+                document.getElementById('favoritesTableBody').appendChild(row);
+            }
+        });
+    }
+
+    document.addEventListener('DOMContentLoaded', loadFavorites);
+</script>
+<!-- Chatbox Button -->
+<div id="chatbox-button"
+     style="position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 1000">
+    <button class="chatbox-btn"
+            onclick="toggleChatbox()"
+            aria-label="Chat with AI">
+        <span class="chatbox-icon">&#128172;</span> <!-- Speech bubble emoji as an icon -->
+    </button>
+</div>
+<!-- Chatbox Popup -->
+<div id="chatbox-popup" class="chatbox-popup">
+    <div class="chatbox-header">
+        <h5 class="mb-0">
+            AI Chatbox Room
+        </h5>
+        <button class="btn btn-sm btn-danger" onclick="toggleChatbox()">
+            Close
+        </button>
+    </div>
+    <iframe src="{{ url_for('ai_chatbox') }}"
+            width="100%"
+            height="100%"
+            frameborder="0"></iframe>
+</div>
+<style>
+    /* Floating Action Button (FAB) Style for Chatbox Button */
+    .chatbox-btn {
+        background-color: #007bff;
+        color: white;
+        border: none;
+        border-radius: 50%;
+        width: 50px;
+        height: 50px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        cursor: pointer;
+        transition: background-color 0.3s ease, transform 0.2s ease;
+    }
+
+    .chatbox-btn:hover {
+        background-color: #0056b3;
+        transform: scale(1.1);
+    }
+
+    .chatbox-btn:focus {
+        outline: none;
+        box-shadow: 0 0 0 4px rgba(0, 123, 255, 0.5);
+    }
+
+    .chatbox-icon {
+        font-size: 1.5rem;
+        line-height: 1;
+    }
+
+    /* Chatbox Popup */
+    .chatbox-popup {
+        position: fixed;
+        bottom: 90px;
+        right: 20px;
+        width: 300px;
+        height: 800px;
+        background: white;
+        border: 1px solid #ccc;
+        border-radius: 10px;
+        display: none;
+        z-index: 1000;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+    }
+
+    .chatbox-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 10px;
+        background: #007bff;
+        color: white;
+        border-bottom: 1px solid #ccc;
+        border-top-left-radius: 10px;
+        border-top-right-radius: 10px;
+    }
+
+    .chatbox-header h5 {
+        margin: 0;
+    }
+</style>
+<script>
+    function toggleChatbox() {
+        const chatboxPopup = document.getElementById('chatbox-popup');
+        chatboxPopup.style.display = chatboxPopup.style.display === 'none' ? 'block' : 'none';
+    }
+</script>
+{% endblock %}

@@ -1,0 +1,40 @@
+{% extends 'bootstrap/base.html' %}
+{% import 'bootstrap/wtf.html' as wtf %}
+{% block title %}
+    {% if title %}
+        {{ title }} - 泊易香港 (EaseParkHK)
+    {% else %}
+        {{ _('泊易香港 (EaseParkHK)') }}
+    {% endif %}
+{% endblock %}
+{% block head %}
+    <title>泊易香港 (EaseParkHK)</title>
+    <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}" type="image/x-icon">
+{% endblock %}
+{% block navbar %}
+    <div class="row">
+        <nav class="navbar navbar-default">
+            <div class="container">
+                <div class="navbar-header">
+                    <!-- Add a brand or toggle button if necessary -->
+                </div>
+                
+                {% include "zh.indexbase.html.j2" %}
+                {% include "zh.search_bar.html.j2" %}
+            </div>
+        </nav>
+    </div>
+    <div class="container">
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                {% for message in messages %}<div class="alert alert-info" role="alert">{{ message }}</div>{% endfor %}
+            {% endif %}
+        {% endwith %}
+        {% block app_content %}{% endblock %}
+    </div>
+{% endblock %}
+{% block scripts %}
+    {{ super() }}
+    {{ moment.include_moment() }}
+    {{ moment.lang(g.locale) }}
+{% endblock %}

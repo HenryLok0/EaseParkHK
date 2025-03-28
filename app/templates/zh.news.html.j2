@@ -1,0 +1,131 @@
+{% extends "zh.base.html.j2" %}
+{% import 'bootstrap/wtf.html' as wtf %}
+{% block head %}
+<title>交通通告</title>
+<link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}" type="image/x-icon">
+{% endblock %}
+{% block app_content %}
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        .notice {
+            border: 1px solid #ccc;
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+        }
+        .notice h2 {
+            margin-top: 0;
+        }
+        .notice p {
+            margin: 10px 0;
+        }
+        .pdf-link {
+            color: #007bff;
+            text-decoration: none;
+        }
+        .pdf-link:hover {
+            text-decoration: underline;
+        }
+        .search-record {
+            display: inline-block;
+            margin: 5px;
+            padding: 5px 10px;
+            background-color: #f1f1f1;
+            border-radius: 5px;
+            cursor: pointer;
+            position: relative;
+        }
+        .search-record:hover {
+            background-color: #e1e1e1;
+        }
+        .search-record .delete-record {
+            position: absolute;
+            top: 0;
+            right: 0;
+            background: red;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+            font-size: 12px;
+            line-height: 20px;
+            text-align: center;
+        }
+        .form-group {
+            display: flex;
+            align-items: center;
+        }
+        .form-group input {
+            flex: 1;
+        }
+    </style>
+</head>
+<body>
+    <div class="container mt-5">
+        <h1 class="text-center mb-4">交通通告</h1>
+        <div class="form-group">
+            <input type="text" id="search-bar" class="form-control" placeholder="搜尋通告..." onkeyup="filterNotices()">
+            <button id="add-search-term" class="btn btn-primary ml-2">+</button>
+        </div>
+        <div id="search-records" class="mt-3"></div>
+        <ul class="list-group" id="notices-list">
+            {% for notice in notices %}
+                <li class="list-group-item notice-item">
+                    <h2>{{ notice.Title_TC }}</h2>
+                    <div>{{ notice.Content_TC | safe }}</div>
+                    <p><strong>開始日期：</strong> {{ notice.StartEffectiveDate }}</p>
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+    <script>
+        function filterNotices() {
+            const searchInput = document.getElementById('search-bar').value.toLowerCase();
+            const notices = document.querySelectorAll('.notice-item');
+
+            notices.forEach(notice => {
+                const title = notice.querySelector('h2').textContent.toLowerCase();
+                const content = notice.querySelector('div').textContent.toLowerCase();
+                const startDate = notice.querySelector('p').textContent.toLowerCase();
+
+                if (title.includes(searchInput) || content.includes(searchInput) || startDate.includes(searchInput)) {
+                    notice.style.display = '';
+                } else {
+                    notice.style.display = 'none';
+                }
+            });
+        }
+
+        document.getElementById('add-search-term').addEventListener('click', () => {
+            const searchInput = document.getElementById('search-bar').value;
+            if (searchInput.trim() !== '') {
+                const searchRecords = document.getElementById('search-records');
+                const newRecord = document.createElement('div');
+                newRecord.className = 'search-record';
+                newRecord.textContent = searchInput;
+
+                const deleteButton = document.createElement('button');
+                deleteButton.className = 'delete-record';
+                deleteButton.textContent = '×';
+                deleteButton.addEventListener('click', () => {
+                    searchRecords.removeChild(newRecord);
+                });
+
+                newRecord.appendChild(deleteButton);
+                newRecord.addEventListener('click', () => {
+                    document.getElementById('search-bar').value = searchInput;
+                    filterNotices();
+                });
+
+                searchRecords.appendChild(newRecord);
+            }
+        });
+    </script>
+</body>
+</html>
+{% endblock %}

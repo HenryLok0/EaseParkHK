@@ -1,0 +1,268 @@
+{% extends "zh.base.html.j2" %}
+{% import 'bootstrap/wtf.html' as wtf %}
+{% block title %}{{ carpark.name_tc }}停車場資訊{% endblock %}
+{% block app_content %}
+    {% include "map.html.j2" %}
+    <div class="carpark-container">
+        <div class="carpark-details" style="display: flex; align-items: flex-start; gap: 20px;">
+            <style>
+                body { 
+                    font-family: Arial, sans-serif; 
+                    margin: 20px; 
+                    transition: background-color 0.3s ease, color 0.3s ease;
+                }
+                
+                table { 
+                    width: 100%; 
+                    border-collapse: collapse; 
+                    transition: border-color 0.3s ease;
+                }
+                
+                th, td { 
+                    padding: 10px; 
+                    border: 1px solid #ddd; 
+                    transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
+                }
+                
+                th { 
+                    background-color: #f4f4f4; 
+                    transition: background-color 0.3s ease, color 0.3s ease;
+                }
+                
+                #map-container { 
+                    width: 100%; 
+                    height: 400px; 
+                    margin-top: 20px; 
+                    display: none; 
+                    transition: border-color 0.3s ease;
+                }
+                
+                .carpark-photo { 
+                    max-width: 300px; 
+                    height: auto; 
+                    margin-right: 20px; 
+                    border-radius: 5px; 
+                    transition: border-color 0.3s ease;
+                }
+                
+                .carpark-details { 
+                    margin-bottom: 20px; 
+                }
+                
+                a { 
+                    color: #007bff; 
+                    transition: color 0.3s ease;
+                }
+                
+                #view-map-button {
+                    display: inline-block;
+                    padding: 8px 15px;
+                    background-color: #007bff;
+                    color: white;
+                    border-radius: 4px;
+                    cursor: pointer;
+                    text-decoration: none;
+                    transition: background-color 0.3s ease, color 0.3s ease;
+                }
+                
+                #view-map-button:hover {
+                    background-color: #0056b3;
+                }
+                
+                /* 夜間模式樣式 */
+                body.dark-mode { 
+                    background-color: #121212; 
+                    color: #e0e0e0;
+                }
+                
+                body.dark-mode table {
+                    border-color: #444;
+                }
+                
+                body.dark-mode th, 
+                body.dark-mode td {
+                    border-color: #444;
+                    color: #e0e0e0;
+                }
+                
+                body.dark-mode th {
+                    background-color: #2a2a2a;
+                }
+                
+                body.dark-mode #map-container {
+                    border-color: #444;
+                }
+                
+                body.dark-mode .carpark-photo {
+                    border-color: #444;
+                }
+                
+                body.dark-mode a {
+                    color: #64a0e8;
+                }
+                
+                body.dark-mode #view-map-button {
+                    background-color: #1e4b85;
+                    color: #e0e0e0;
+                }
+                
+                body.dark-mode #view-map-button:hover {
+                    background-color: #2a5fa8;
+                }
+            </style>
+
+            {% if carpark.carpark_photo %}
+                <img src="{{ carpark.carpark_photo }}" alt="停車場照片" class="carpark-photo">
+            {% else %}
+                <img src="path/to/default/photo.jpg" alt="停車場照片" class="carpark-photo">
+            {% endif %}
+            
+            <div>
+                <h1>{{ carpark.name_tc }}</h1>
+                <p>
+                    <strong>地址：</strong> {{ carpark.displayAddress_tc }}
+                </p>
+                <p>
+                    <strong>聯絡電話：</strong> {{ carpark.contactNo }}
+                </p>
+                <p>
+                    <strong>網站：</strong>
+                    <a href="{{ carpark.website_en }}" target="_blank">{{ carpark.website_tc }}</a>
+                </p>
+                <p>
+                    <strong>營運狀態：</strong> {{ carpark.opening_status }}     
+                </p>
+                <a id="view-map-button"
+                   onclick="showMap('{{ carpark.latitude }}', '{{ carpark.longitude }}')">查看地圖</a>
+            </div>
+        </div>
+        <body>
+            <h1>停車位空缺</h1>
+            <table>
+                <thead>
+                    <tr>
+                        <th>類型</th>
+                        <th>空缺數量</th>
+                        <th>最後更新時間</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in carpark.vacancy_data %}
+                        <tr>
+                            <td>{{ item.type }}</td>
+                            <td>{{ item.vacancy }}</td>
+                            <td>{{ item.last_update }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </body>
+    </div>
+    <div id="map-container" style="margin-top: 20px;">
+        <iframe id="map" style="width: 100%; height: 100%; border: none;"></iframe>
+    </div>
+    <script>
+        function showMap(latitude, longitude) {
+            var mapIframe = document.getElementById('map');
+            mapIframe.src = `https://maps.google.com/?q=${latitude},${longitude}&output=embed`;
+            document.getElementById('map-container').style.display = 'block';
+        }
+
+        // 頁面加載時自動點擊「查看地圖」按鈕
+        window.onload = function() {
+            document.getElementById('view-map-button').click();
+            
+            // 應用已儲存的主題設定
+            if (localStorage.getItem('darkMode') === 'enabled') {
+                document.body.classList.add('dark-mode');
+            }
+        };
+    </script>
+        <!-- Chatbox Button -->
+        <div id="chatbox-button" style="position: fixed; bottom: 20px; right: 20px; z-index: 1000;">
+            <button class="chatbox-btn" onclick="toggleChatbox()" aria-label="Chat with AI">
+                <span class="chatbox-icon">&#128172;</span> <!-- Speech bubble emoji as an icon -->
+            </button>
+        </div>
+        
+        <!-- Chatbox Popup -->
+        <div id="chatbox-popup" class="chatbox-popup">
+            <div class="chatbox-header">
+                <h5 class="mb-0">AI Chatbox Room</h5>
+                <button class="btn btn-sm btn-danger" onclick="toggleChatbox()">Close</button>
+            </div>
+            <iframe src="{{ url_for('ai_chatbox') }}" width="100%" height="100%" frameborder="0"></iframe>
+        </div>
+        
+        <style>
+            /* Floating Action Button (FAB) Style for Chatbox Button */
+            .chatbox-btn {
+                background-color: #007bff;
+                color: white;
+                border: none;
+                border-radius: 50%;
+                width: 50px;
+                height: 50px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+                cursor: pointer;
+                transition: background-color 0.3s ease, transform 0.2s ease;
+            }
+        
+            .chatbox-btn:hover {
+                background-color: #0056b3;
+                transform: scale(1.1);
+            }
+        
+            .chatbox-btn:focus {
+                outline: none;
+                box-shadow: 0 0 0 4px rgba(0, 123, 255, 0.5);
+            }
+        
+            .chatbox-icon {
+                font-size: 1.5rem;
+                line-height: 1;
+            }
+        
+            /* Chatbox Popup */
+            .chatbox-popup {
+                position: fixed;
+                bottom: 90px;
+                right: 20px;
+                width: 300px;
+                height: 800px;
+                background: white;
+                border: 1px solid #ccc;
+                border-radius: 10px;
+                display: none;
+                z-index: 1000;
+                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+                overflow: hidden;
+            }
+        
+            .chatbox-header {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                padding: 10px;
+                background: #007bff;
+                color: white;
+                border-bottom: 1px solid #ccc;
+                border-top-left-radius: 10px;
+                border-top-right-radius: 10px;
+            }
+        
+            .chatbox-header h5 {
+                margin: 0;
+            }
+        </style>
+        
+        <script>
+            function toggleChatbox() {
+                const chatboxPopup = document.getElementById('chatbox-popup');
+                chatboxPopup.style.display = chatboxPopup.style.display === 'none' ? 'block' : 'none';
+            }
+        </script>
+{% endblock %}

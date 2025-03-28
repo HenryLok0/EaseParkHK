@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="zh-HK">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>停車場搜索</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            background-color: #f8f9fa;
+        }
+        .custom-search-bar {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            width: 100%;
+        }
+        #searchInput {
+            flex: 1;
+            border-radius: 20px 0 0 20px;
+            padding: 12px 20px;
+            border: 1px solid #ced4da;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+            height: 40px; /* Ensure the height is consistent */
+        }
+        #searchInput:focus {
+            border-color: #80bdff;
+            outline: none;
+        }
+        .search-btn {
+            border-radius: 0 20px 20px 0;
+            padding: 0 20px; /* Adjust padding to match input height */
+            background-color: #007bff;
+            color: white;
+            border: 1px solid #007bff;
+            transition: background-color 0.3s ease, border-color 0.3s ease;
+            height: 40px; /* Ensure the height is consistent */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .search-btn:hover {
+            background-color: #0056b3;
+            border-color: #0056b3;
+        }
+    </style>
+</head>
+<body onload="checkSearchParams()">
+    <!-- 搜索欄 -->
+    <div class="custom-search-bar">
+        <form class="form-inline" action="{{ url_for('zh_search') }}" onsubmit="showSearchBar()" style="width: 100%; display: flex;">
+            <input type="text" id="searchInput" name="w" value="{{ search_query }}" placeholder="搜索停車場" aria-label="Search">
+            <button class="btn search-btn" type="submit">搜索</button>
+        </form>
+    </div>
+    <script>
+        function navigateToSelectedURL() {
+            var dropdown = document.getElementById("regionDropdown");
+            var selectedOption = dropdown.options[dropdown.selectedIndex];
+            var selectedURL = selectedOption.value;
+            if (selectedURL) {
+                window.location.href = selectedURL;
+            }
+        }
+
+        function showSearchBar() {
+            document.getElementById('searchBar').style.display = 'block';
+        }
+
+        function checkSearchParams() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const searchParam = urlParams.get('w');
+            if (searchParam) {
+                document.getElementById('searchBar').style.display = 'block';
+                document.getElementById('searchInput').value = searchParam;
+            }
+        }
+    </script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+</body>
+</html>

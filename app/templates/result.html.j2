@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>搜尋結果</title>
+</head>
+<body>
+    <h1>搜尋結果</h1>
+    <ul>
+        {% for carpark in carparks %}
+            <li>{{ carpark['name'] }} - {{ carpark.get('price', 'N/A') }}</li>
+        {% endfor %}
+    </ul>
+    <a href="/">返回首頁</a>
+</body>
+</html>

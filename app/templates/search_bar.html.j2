@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Car Park Search</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            background-color: #f8f9fa;
+        }
+        .custom-search-bar {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            width: 100%;
+            position: relative;
+        }
+        #searchInput {
+            flex: 1;
+            border-radius: 20px 0 0 20px;
+            padding: 12px 20px;
+            border: 1px solid #ced4da;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+            height: 40px;
+        }
+        #searchInput:focus {
+            border-color: #80bdff;
+            outline: none;
+        }
+        .search-btn {
+            border-radius: 0 20px 20px 0;
+            padding: 0 20px;
+            background-color: #007bff;
+            color: white;
+            border: 1px solid #007bff;
+            transition: background-color 0.3s ease, border-color 0.3s ease;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .search-btn:hover {
+            background-color: #0056b3;
+            border-color: #0056b3;
+        }
+        .suggestions {
+            position: absolute;
+            top: 70px;
+            left: 20px;
+            right: 20px;
+            background-color: white;
+            border: 1px solid #ced4da;
+            border-radius: 4px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+            display: none;
+        }
+        .suggestions div {
+            padding: 10px;
+            cursor: pointer;
+            border-bottom: 1px solid #ced4da;
+        }
+        .suggestions div:hover {
+            background-color: #f1f1f1;
+        }
+        
+        /* 深色模式樣式 */
+        body.dark-mode {
+            background-color: #121212;
+            color: #e0e0e0;
+        }
+        
+        body.dark-mode #searchInput {
+            background-color: #2a2a2a;
+            border-color: #444;
+            color: #e0e0e0;
+        }
+        
+        body.dark-mode #searchInput:focus {
+            border-color: #66afe9;
+            box-shadow: 0 0 0 0.2rem rgba(102, 175, 233, 0.25);
+        }
+        
+        body.dark-mode .search-btn {
+            background-color: #1e4b85;
+            border-color: #17386a;
+        }
+        
+        body.dark-mode .search-btn:hover {
+            background-color: #2a5ca0;
+            border-color: #1e4b85;
+        }
+        
+        body.dark-mode .suggestions {
+            background-color: #1e1e1e;
+            border-color: #444;
+        }
+        
+        body.dark-mode .suggestions div {
+            border-color: #444;
+            color: #e0e0e0;
+        }
+        
+        body.dark-mode .suggestions div:hover {
+            background-color: #333;
+        }
+    </style>
+</head>
+<body onload="checkSearchParams()">
+    <!-- Search Bar -->
+    <div class="custom-search-bar">
+        <form class="form-inline" action="{{ url_for('result') }}" onsubmit="showSearchBar()" style="width: 100%; display: flex;">
+            <input type="text" id="searchInput" name="p" value="{{ search_query }}" placeholder="Search for carpark" aria-label="Search" name="p" oninput="showSuggestions()">
+            <button class="btn search-btn" type="submit">Search</button>
+        </form>
+        <div id="suggestions" class="suggestions"></div>
+    </div>
+
+    <script>
+        // 示例 API 地址（替换为实际的 API 地址）
+        const API_URL = "https://api.data.gov.hk/v1/carpark-info-vacancy";
+
+        // 缓存 API 数据
+        let cachedData = [];
+
+        // 获取 API 数据
+        async function fetchData() {
+            try {
+                const response = await fetch(API_URL);
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                const data = await response.json();
+                cachedData = data.results; // 缓存数据
+            } catch (error) {
+                console.error('Error fetching data:', error);
+            }
+        }
+
+        // 显示推荐列表
+        function showSuggestions() {
+            const input = document.getElementById('searchInput').value.trim().toLowerCase();
+            const suggestions = document.getElementById('suggestions');
+            suggestions.innerHTML = '';
+
+            if (input.length > 0 && cachedData.length > 0) {
+                // 过滤匹配的推荐数据（根据 name 字段）
+                const filteredData = cachedData
+                    .filter(item => item.name.toLowerCase().includes(input))
+                    .slice(0, 5); // 只取前 5 条数据
+
+                if (filteredData.length > 0) {
+                    filteredData.forEach(item => {
+                        const div = document.createElement('div');
+                        div.textContent = `${item.name} - ${item.displayAddress}`;
+                        div.onclick = function() {
+                            document.getElementById('searchInput').value = item.name;
+                            suggestions.style.display = 'none';
+                        };
+                        suggestions.appendChild(div);
+                    });
+                    suggestions.style.display = 'block';
+                } else {
+                    suggestions.style.display = 'none';
+                }
+            } else {
+                suggestions.style.display = 'none';
+            }
+        }
+
+        // 页面加载时获取 API 数据
+        fetchData();
+
+        // 点击页面其他位置时隐藏推荐列表
+        document.addEventListener('click', function(event) {
+            const suggestions = document.getElementById('suggestions');
+            if (event.target !== document.getElementById('searchInput')) {
+                suggestions.style.display = 'none';
+            }
+        });
+    </script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+</body>
+</html>

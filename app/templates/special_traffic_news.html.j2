@@ -1,0 +1,51 @@
+<div id="traffic-news" class="mb-4">
+    <h2>Special Traffic News</h2>
+    <div id="traffic-news-content" class="alert alert-info">
+        Loading traffic news...
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        fetch('https://www.td.gov.hk/en/special_news/trafficnews.xml')
+            .then(response => response.text())
+            .then(data => {
+                const parser = new DOMParser();
+                const xmlDoc = parser.parseFromString(data, "text/xml");
+                const messages = xmlDoc.getElementsByTagName("message");
+
+                if (messages.length > 0) {
+                    let content = '';
+                    for (let i = 0; i < messages.length; i++) {
+                        const incidentHeadingEn = messages[i].getElementsByTagName("INCIDENT_HEADING_EN")[0].textContent;
+                        const incidentDetailEn = messages[i].getElementsByTagName("INCIDENT_DETAIL_EN")[0].textContent;
+                        const locationEn = messages[i].getElementsByTagName("LOCATION_EN")[0].textContent;
+                        const announcementDate = messages[i].getElementsByTagName("ANNOUNCEMENT_DATE")[0].textContent;
+                        const contentEn = messages[i].getElementsByTagName("CONTENT_EN")[0].textContent;
+
+                        const incidentHeadingCn = messages[i].getElementsByTagName("INCIDENT_HEADING_CN")[0].textContent;
+                        const incidentDetailCn = messages[i].getElementsByTagName("INCIDENT_DETAIL_CN")[0].textContent;
+                        const locationCn = messages[i].getElementsByTagName("LOCATION_CN")[0].textContent;
+                        const contentCn = messages[i].getElementsByTagName("CONTENT_CN")[0].textContent;
+
+                        content += `
+                            <div class="alert alert-warning">
+                                <h4>${incidentHeadingEn}</h4>
+                                <p><strong>Detail:</strong> ${incidentDetailEn}</p>
+                                <p><strong>Location:</strong> ${locationEn}</p>
+                                <p><strong>Date:</strong> ${announcementDate}</p>
+                                <p>${contentEn}</p>
+                            </div>
+                        `;
+                    }
+                    document.getElementById('traffic-news-content').innerHTML = content;
+                } else {
+                    document.getElementById('traffic-news-content').innerHTML = 'No special traffic news available.';
+                }
+            })
+            .catch(error => {
+                document.getElementById('traffic-news-content').innerHTML = 'Failed to load traffic news.';
+                console.error('Error fetching traffic news:', error);
+            });
+    });
+</script>

@@ -1,0 +1,52 @@
+{% extends "base.html.j2" %}
+{% import 'bootstrap/wtf.html' as wtf %}
+{% block app_content %}
+    <div class="container">
+        <table class="table tbale-sm">
+            <thead>
+                <th>ID</th>
+                <th>area</th>
+                <th>Edit</th>
+                <th>Delete</th>
+            </thead>
+            <tbody>
+            {% for area in areas %}
+            <tr>
+                <td>{{loop.index}}</td>
+                <td>{{ area.name }}</td>
+                <td> <a href="{{url_for('updatearea', id=area.id)}}" class="btn btn-sm btn-info">Edit </a> </td>
+                <td><button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#exampleModal-{{area.id}}">
+                Delete
+                </button></td>
+            </tr>
+
+    <!--============= MODEL ===================-->
+            <div class="modal fade" id="exampleModal-{{area.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">{{area.name }}</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p class="text-danger">Are you Sure that you want to delete this area ({{ area.name }})</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                    <form action="{{url_for('deletearea',id=area.id)}}" method="post">
+                    <button type="submit" class="btn btn-danger">Delete</button>
+                    </form>
+                    
+                </div>
+                </div>
+            </div>
+            </div>
+    <!--==============MODEL ===================-->
+
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}

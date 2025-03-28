@@ -1,0 +1,105 @@
+{% extends "base.html.j2" %}
+{% import 'bootstrap/wtf.html' as wtf %}
+{% block app_content %}
+    <h1>{{ _('Sign In') }}</h1>
+    <div class="row">
+        <div class="col-md-4">{{ wtf.quick_form(form) }}</div>
+    </div>
+    <br/>
+    <p>
+        {{ _('New User?') }} <a href="{{ url_for('register') }}">{{ _('Click to Register!') }}</a>
+    </p>
+    <p>
+        {{ _('Forgot Your Password?') }}
+        <a href="{{ url_for('reset_password_request') }}">{{ _('Click to Reset It') }}</a>
+    </p>
+
+    By continuing to use, you agree to EaseParkHK's <a href="/privacy_policy">{{ _('Privacy Policy') }}</a>
+
+<div id="chatbox-button" style="position: fixed; bottom: 20px; right: 20px; z-index: 1000;">
+    <button class="chatbox-btn" onclick="toggleChatbox()" aria-label="Chat with AI">
+        <span class="chatbox-icon">&#128172;</span> <!-- Speech bubble emoji as an icon -->
+    </button>
+</div>
+
+<!-- Chatbox Popup -->
+<div id="chatbox-popup" class="chatbox-popup">
+    <div class="chatbox-header">
+        <h5 class="mb-0">AI Chatbox Room</h5>
+        <button class="btn btn-sm btn-danger" onclick="toggleChatbox()">Close</button>
+    </div>
+    <iframe src="{{ url_for('ai_chatbox') }}" width="100%" height="100%" frameborder="0"></iframe>
+</div>
+
+<style>
+    /* Floating Action Button (FAB) Style for Chatbox Button */
+    .chatbox-btn {
+        background-color: #007bff;
+        color: white;
+        border: none;
+        border-radius: 50%;
+        width: 50px;
+        height: 50px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        cursor: pointer;
+        transition: background-color 0.3s ease, transform 0.2s ease;
+    }
+
+    .chatbox-btn:hover {
+        background-color: #0056b3;
+        transform: scale(1.1);
+    }
+
+    .chatbox-btn:focus {
+        outline: none;
+        box-shadow: 0 0 0 4px rgba(0, 123, 255, 0.5);
+    }
+
+    .chatbox-icon {
+        font-size: 1.5rem;
+        line-height: 1;
+    }
+
+    /* Chatbox Popup */
+    .chatbox-popup {
+        position: fixed;
+        bottom: 90px;
+        right: 20px;
+        width: 300px;
+        height: 800px;
+        background: white;
+        border: 1px solid #ccc;
+        border-radius: 10px;
+        display: none;
+        z-index: 1000;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+    }
+
+    .chatbox-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 10px;
+        background: #007bff;
+        color: white;
+        border-bottom: 1px solid #ccc;
+        border-top-left-radius: 10px;
+        border-top-right-radius: 10px;
+    }
+
+    .chatbox-header h5 {
+        margin: 0;
+    }
+</style>
+
+<script>
+    function toggleChatbox() {
+        const chatboxPopup = document.getElementById('chatbox-popup');
+        chatboxPopup.style.display = chatboxPopup.style.display === 'none' ? 'block' : 'none';
+    }
+</script>
+{% endblock %}
