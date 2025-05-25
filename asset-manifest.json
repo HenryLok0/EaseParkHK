@@ -1,0 +1,15 @@
+{
+  "files": {
+    "main.css": "/EaseParkHK/static/css/main.c1ed0c74.css",
+    "main.js": "/EaseParkHK/static/js/main.6a06be0a.js",
+    "static/media/bootstrap-icons.woff?": "/EaseParkHK/static/media/bootstrap-icons.1295669cd4e305c97f2c.woff",
+    "static/media/bootstrap-icons.woff2?": "/EaseParkHK/static/media/bootstrap-icons.92ea18a81d737146ff04.woff2",
+    "index.html": "/EaseParkHK/index.html",
+    "main.c1ed0c74.css.map": "/EaseParkHK/static/css/main.c1ed0c74.css.map",
+    "main.6a06be0a.js.map": "/EaseParkHK/static/js/main.6a06be0a.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.c1ed0c74.css",
+    "static/js/main.6a06be0a.js"
+  ]
+}
