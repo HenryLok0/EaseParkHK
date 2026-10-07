@@ -1,15 +1,15 @@
 {
   "files": {
-    "main.css": "/easeparkhk/static/css/main.be39f1bc.css",
-    "main.js": "/easeparkhk/static/js/main.6a06be0a.js",
-    "static/media/bootstrap-icons.woff?": "/easeparkhk/static/media/bootstrap-icons.1295669cd4e305c97f2c.woff",
-    "static/media/bootstrap-icons.woff2?": "/easeparkhk/static/media/bootstrap-icons.92ea18a81d737146ff04.woff2",
-    "index.html": "/easeparkhk/index.html",
-    "main.be39f1bc.css.map": "/easeparkhk/static/css/main.be39f1bc.css.map",
-    "main.6a06be0a.js.map": "/easeparkhk/static/js/main.6a06be0a.js.map"
+    "main.css": "/EaseParkHK/static/css/main.c1ed0c74.css",
+    "main.js": "/EaseParkHK/static/js/main.6a06be0a.js",
+    "static/media/bootstrap-icons.woff?": "/EaseParkHK/static/media/bootstrap-icons.1295669cd4e305c97f2c.woff",
+    "static/media/bootstrap-icons.woff2?": "/EaseParkHK/static/media/bootstrap-icons.92ea18a81d737146ff04.woff2",
+    "index.html": "/EaseParkHK/index.html",
+    "main.c1ed0c74.css.map": "/EaseParkHK/static/css/main.c1ed0c74.css.map",
+    "main.6a06be0a.js.map": "/EaseParkHK/static/js/main.6a06be0a.js.map"
   },
   "entrypoints": [
-    "static/css/main.be39f1bc.css",
+    "static/css/main.c1ed0c74.css",
     "static/js/main.6a06be0a.js"
   ]
 }
